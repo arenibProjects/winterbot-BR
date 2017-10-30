@@ -7,6 +7,8 @@ class Coders{
     ~Coders();
     int left();
     int right();
+    void reset();
+    
   private:
     Encoder *lc_;
     Encoder *rc_;

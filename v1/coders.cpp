@@ -18,4 +18,8 @@ int Coders::right(){
   rc_->write(0);
   return a;
 }
+void Coders::reset(){
+  lc_->write(0);
+  rc_->write(0);
+}
 

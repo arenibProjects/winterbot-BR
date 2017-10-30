@@ -14,7 +14,7 @@ double circstrain(double c){
   return c;
 }
 
-cuPID::cuPID(double * iinput, double * isetpoint,double * ioutput,double ikp,double iki,double ikd){
+CuPID::CuPID(double * iinput, double * isetpoint,double * ioutput,double ikp,double iki,double ikd){
   kp=ikp;
   ki=iki;
   kd=ikd;
@@ -25,7 +25,7 @@ cuPID::cuPID(double * iinput, double * isetpoint,double * ioutput,double ikp,dou
   prevE=0;
   integ=0;
 }
-void cuPID::compute(){
+void CuPID::compute(){
   double E;
   double E1=circstrain(*setpoint)-circstrain(*input);
   double E2=circstrain(*setpoint+pi)-circstrain(*input+pi);
