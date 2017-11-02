@@ -12,7 +12,7 @@ void setup() {
   Serial.println("GO!!");
   controlTimer.begin(controlLoop,4166);
   controlTimer.priority(129);
-  controller.setTarget(-2000,2000,0);
+  controller.setTarget(-2000,0,0);
 }
 
 void loop() {
