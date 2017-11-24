@@ -21,7 +21,8 @@ void DifferentialController::update(double x,double y, double a){
   double cd=sqrt(pow(tx-x,2)+pow(ty-y,2));
   double ca=atan2(ty-y,tx-x);
   //angle
-  atar=ca;
+  if(cd>1) atar=ca;
+  else atar=ta;
   ain=a;
   anglePID->compute();
   //distance
