@@ -2,9 +2,12 @@
 #include "Motor.hpp"
 #include "Odometry.hpp"
 #include "DifferentialController.hpp"
+#include "SerialCommand.h"
 IntervalTimer controlTimer;
 Coders coders(33,34,35,36);
 Odometry odometry(0,0,0,170,65,20000);
+SerialCommand sCmd;
+long t=millis();
 //DifferentialController controller(10,0,0,100,0,0);
 void setup() {
   Serial.begin(250000);
@@ -13,10 +16,20 @@ void setup() {
   controlTimer.begin(controlLoop,4166);
   controlTimer.priority(129);
   //controller.setTarget(-2000,0,0);
+  // Setup callbacks for SerialCommand commands
+  sCmd.addCommand("GOTO",    goto_command);     // goto
+  sCmd.addCommand("SPOS",   spos_command);     // setpos
+  sCmd.addCommand("WHOIS", whois_command);       // who are you?
+  sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+  Serial.println("READY");
 }
 
 void loop() {
-  
+  sCmd.readSerial();
+  if(millis()-t>100){
+    Serial.print("POS ");Serial.print(odometry.getX());Serial.print(" ");Serial.print(odometry.getY());Serial.print(" ");Serial.println(odometry.getA());
+    t=millis();
+  }
 }
 
 void controlLoop(){
@@ -26,6 +39,23 @@ void controlLoop(){
   //controller.update(odometry.getX(),odometry.getY(),odometry.getA());
   //odometry.move(controller.getLeft(),controller.getRight());
   //odometry.move(1000,1000);
-  Serial.print("Left:");Serial.print(cl);Serial.print(" Right:");Serial.print(cr);Serial.print(" X:");Serial.print(odometry.getX());Serial.print(" Y:");Serial.print(odometry.getY());Serial.print(" A:");Serial.println(odometry.getA());
 }
 
+
+void goto_command() {
+  delay(2000);
+  Serial.println("ONSPOT");
+}
+void spos_command() {
+  sCmd.next();
+  sCmd.next();
+  sCmd.next();
+}
+void whois_command() {
+  Serial.println("IAM motionbase");
+}
+
+// This gets set as the default handler, and gets called when no other command matches.
+void unrecognized(const char *command) {
+  Serial.println("SCRAMBLED");
+}
