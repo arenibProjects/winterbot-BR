@@ -8,6 +8,7 @@ Coders coders(33,34,35,36);
 Odometry odometry(0,0,0,170,65,20000);
 SerialCommand sCmd;
 long t=millis();
+bool sendPos=false;
 //DifferentialController controller(10,0,0,100,0,0);
 void setup() {
   Serial.begin(250000);
@@ -19,6 +20,8 @@ void setup() {
   // Setup callbacks for SerialCommand commands
   sCmd.addCommand("GOTO",    goto_command);     // goto
   sCmd.addCommand("SPOS",   spos_command);     // setpos
+  sCmd.addCommand("+POS",   startpos_command);     // setpos
+  sCmd.addCommand("-POS",   stoppos_command);     // setpos
   sCmd.addCommand("WHOIS", whois_command);       // who are you?
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
   Serial.println("READY");
@@ -27,7 +30,7 @@ void setup() {
 void loop() {
   sCmd.readSerial();
   if(millis()-t>100){
-    Serial.print("POS ");Serial.print(odometry.getX());Serial.print(" ");Serial.print(odometry.getY());Serial.print(" ");Serial.println(odometry.getA());
+    if(sendPos)Serial.print("POS ");Serial.print(odometry.getX());Serial.print(" ");Serial.print(odometry.getY());Serial.print(" ");Serial.println(odometry.getA());
     t=millis();
   }
 }
@@ -47,9 +50,13 @@ void goto_command() {
   Serial.println("ONSPOT");
 }
 void spos_command() {
-  sCmd.next();
-  sCmd.next();
-  sCmd.next();
+  odometry.set(String(sCmd.next()).toFloat(),String(sCmd.next()).toFloat(),String(sCmd.next()).toFloat());
+}
+void startpos_command(){
+  sendPos=true;
+}
+void stoppos_command(){
+  sendPos=false;
 }
 void whois_command() {
   Serial.println("IAM motionbase");
