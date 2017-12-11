@@ -23,14 +23,17 @@ void setup() {
   sCmd.addCommand("+POS",   startpos_command);     // setpos
   sCmd.addCommand("-POS",   stoppos_command);     // setpos
   sCmd.addCommand("WHOIS", whois_command);       // who are you?
+  sCmd.addCommand("AYR", ready_command);       // are you ready?
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
-  Serial.println("READY");
+  ready_command();
 }
 
 void loop() {
   sCmd.readSerial();
   if(millis()-t>100){
-    if(sendPos)Serial.print("POS ");Serial.print(odometry.getX());Serial.print(" ");Serial.print(odometry.getY());Serial.print(" ");Serial.println(odometry.getA());
+    if(sendPos){
+      Serial.print("POS ");Serial.print(odometry.getX());Serial.print(" ");Serial.print(odometry.getY());Serial.print(" ");Serial.println(odometry.getA());
+    }
     t=millis();
   }
 }
@@ -61,7 +64,10 @@ void stoppos_command(){
 void whois_command() {
   Serial.println("IAM motionbase");
 }
-
+void ready_command() {
+  Serial.println("READY");
+  stoppos_command();
+}
 // This gets set as the default handler, and gets called when no other command matches.
 void unrecognized(const char *command) {
   Serial.println("SCRAMBLED");
