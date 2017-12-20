@@ -23,8 +23,8 @@ Odometry::Odometry(double x0,double y0,double a0,double L,double R,int S){
   s_=S;
 }
 void Odometry::move(int cl,int cr){
-  double dr=r_*((double)cr)/((double)s_);
-  double dl=r_*((double)cl)/((double)s_);
+  double dr=2*opi*r_*((double)cr)/((double)s_);
+  double dl=2*opi*r_*((double)cl)/((double)s_);
   a_ = ocircstrain(a_ + (dr-dl)/l_);
   double z=(dr+dl)/2;
   x_+=cos(a_)*z;

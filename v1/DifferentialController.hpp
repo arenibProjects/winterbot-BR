@@ -9,6 +9,9 @@ class DifferentialController{
     void setTarget(double x,double y, double z);
     int getLeft();
     int getRight();
+    void setFactors(double dp,double di,double dd,double ap,double ai,double ad);
+    double getFactor(int i);
+    void reset();
   private:
     PID *distancePID;
     CuPID *anglePID;

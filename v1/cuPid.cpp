@@ -42,3 +42,22 @@ void CuPID::compute(){
   prevE=E;
   *output=kp*E+ki*integ+kd*deriv;
 }
+void CuPID::set(double ikp,double iki,double ikd){
+  kp=ikp;
+  ki=iki;
+  kd=ikd;
+}
+double CuPID::getP(){
+  return kp;
+}
+double CuPID::getI(){
+  return ki;
+}
+double CuPID::getD(){
+  return kd;
+}
+void CuPID::reset(){
+  prevT=-1;
+  prevE=0;
+  integ=0;
+}

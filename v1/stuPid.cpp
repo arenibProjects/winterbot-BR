@@ -30,3 +30,23 @@ void PID::compute(){
   prevE=E;
   *output=kp*E+ki*integ+kd*deriv;
 }
+void PID::set(double ikp,double iki,double ikd){
+  kp=ikp;
+  ki=iki;
+  kd=ikd;
+}
+double PID::getP(){
+  return kp;
+}
+double PID::getI(){
+  return ki;
+}
+double PID::getD(){
+  return kd;
+}
+void PID::reset(){
+  prevT=-1;
+  prevE=0;
+  integ=0;
+}
+

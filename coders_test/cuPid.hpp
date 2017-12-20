@@ -7,6 +7,11 @@ class CuPID
   public:
     CuPID(double * iinput, double * isetpoint,double * ioutput,double ikp,double iki,double ikd);
     void compute();
+    void set(double kp,double ki,double kd);
+    double getP();
+    double getI();
+    double getD();
+    double reset();
   private:
     double *input,*setpoint,*output,kp,ki,kd,integ,prevE;
     long prevT;

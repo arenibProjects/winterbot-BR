@@ -5,7 +5,7 @@
 #include "SerialCommand.h"
 IntervalTimer controlTimer;
 Coders coders(33,34,35,36);
-Odometry odometry(0,0,0,170,65,20000);
+Odometry odometry(0,0,0,265.0,16.0,20000);
 SerialCommand sCmd;
 long t=millis();
 bool sendPos=false;
@@ -20,8 +20,10 @@ void setup() {
   // Setup callbacks for SerialCommand commands
   sCmd.addCommand("GOTO",    goto_command);     // goto
   sCmd.addCommand("SPOS",   spos_command);     // setpos
-  sCmd.addCommand("+POS",   startpos_command);     // setpos
-  sCmd.addCommand("-POS",   stoppos_command);     // setpos
+  sCmd.addCommand("+POS",   startpos_command);     // startpos
+  sCmd.addCommand("-POS",   stoppos_command);     // stoppos
+  sCmd.addCommand("SPID",   spid_command);     // setpid
+  sCmd.addCommand("GPID",   gpid_command);     // getpid
   sCmd.addCommand("WHOIS", whois_command);       // who are you?
   sCmd.addCommand("AYR", ready_command);       // are you ready?
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
@@ -54,6 +56,17 @@ void goto_command() {
 }
 void spos_command() {
   odometry.set(String(sCmd.next()).toFloat(),String(sCmd.next()).toFloat(),String(sCmd.next()).toFloat());
+}
+void spid_command() {// === NOT IMPLEMENTED ===
+  sCmd.next();
+  sCmd.next();
+  sCmd.next();
+  sCmd.next();
+  sCmd.next();
+  sCmd.next();
+}
+void gpid_command() {// === NOT IMPLEMENTED ===
+  Serial.println("PID 0 0 0 0 0 0");
 }
 void startpos_command(){
   sendPos=true;

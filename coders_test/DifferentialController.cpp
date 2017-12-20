@@ -41,3 +41,21 @@ int DifferentialController::getLeft(){
 int DifferentialController::getRight(){
   return min(abs(dout),MAX_PWM-min(abs(aout),MAX_PWM))+cap(aout,MAX_PWM);
 }
+void DifferentialController::setFactors(double dp,double di,double dd,double ap,double ai,double ad){
+  distancePID->set(dp,di,dd);
+  anglePID->set(ap,ai,ad);
+}
+double DifferentialController::getFactor(int i){
+  if(i==0) return distancePID->getP();
+  if(i==1) return distancePID->getI();
+  if(i==2) return distancePID->getD();
+  if(i==3) return anglePID->getP();
+  if(i==4) return anglePID->getI();
+  if(i==5) return anglePID->getD();
+  return 0;
+}
+void DifferentialController::reset(){
+  distancePID->reset();
+  anglePID->reset();
+}
+
