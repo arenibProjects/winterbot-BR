@@ -1,4 +1,5 @@
 /* simple timestamp useful Pid */
+/* is to be used for linear or constrained angular PID control*/
 #ifndef STUPID_H
 #define STUPID_H
 

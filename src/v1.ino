@@ -3,12 +3,14 @@
 #include "Odometry.hpp"
 #include "DifferentialController.hpp"
 #include "SerialCommand.h"
-IntervalTimer controlTimer;
+IntervalTimer controlTimer; //declaration of the fixed time loop used for the differential controller
 Coders coders(33,34,35,36);
 Odometry odometry(0,0,0,265.0,16.0,20000);
 DifferentialController controller(10,0,0,100,0,0);
 Motor leftMotor(2,3,4);
 Motor rightMotor(5,6,7);
+
+//communication stuff
 SerialCommand sCmd;
 long t=millis();
 bool sendPos=false;
@@ -16,8 +18,8 @@ bool on=false;
 
 void setup() {
   Serial.begin(250000);
-  delay(10000);
-  Serial.println("GO!!");
+  delay(10000); // too long. Can you feel it? too long ...
+  Serial.println("LOG GO!!");
   controlTimer.begin(controlLoop,4166);
   controlTimer.priority(129);
   //controller.setTarget(-2000,0,0);
@@ -55,22 +57,27 @@ void loop() {
   }
 }
 
-void controlLoop(){
+void controlLoop(){//the magic begins here
+  //reading an reseting the coders
   int cl=coders.left();
   int cr=coders.right();
+  //updating the odometry system with the coders value to get the new robot position
   odometry.move(cl,cr);
+  //updating the controller with the new robot position to get the appropriate motor PWM
   controller.update(odometry.getX(),odometry.getY(),odometry.getA());
   if(on){
+    //updating the motors
     leftMotor.setSpeed(controller.getLeft());
     rightMotor.setSpeed(controller.getRight());
   }else{
+    //putting the motors in non connect mode (warning: will not force the robot to stop. See still_command for that)
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
   }
-}
+}//the magic ends here
 
 
-void goto_command() {
+void goto_command() {//NOT YET IMPLEMENTED
   delay(2000);
   Serial.println("ONSPOT");
 }
@@ -104,7 +111,7 @@ void still_command() {
   controller.setTarget(odometry.getX(),odometry.getY(),odometry.getA());
 }
 void on_command() {
-  rpid_command();
+  controller.reset(); //very important
   on=true;
 }
 void off_command() {

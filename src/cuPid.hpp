@@ -1,4 +1,5 @@
-/* simple timestamp useful Pid */
+/* circular unit Pid */
+/* is to be used for unrestricted angular control*/
 #ifndef CUPID_H
 #define CUPID_H
 
